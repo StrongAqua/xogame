@@ -11,11 +11,9 @@ import Foundation
 public final class Gameboard {
     
     // MARK: - Properties
-    
     private lazy var positions: [[Player?]] = initialPositions()
     
     // MARK: - public
-    
     public func setPlayer(_ player: Player, at position: GameboardPosition) {
         positions[position.column][position.row] = player
     }
@@ -39,7 +37,6 @@ public final class Gameboard {
     }
     
     // MARK: - Private
-    
     private func initialPositions() -> [[Player?]] {
         var positions: [[Player?]] = []
         for _ in 0 ..< GameboardSize.columns {
@@ -47,5 +44,17 @@ public final class Gameboard {
             positions.append(rows)
         }
         return positions
+    }
+    
+    public func freeCells() -> [GameboardPosition] {
+        var freeCells: [GameboardPosition] = []
+        for column in 0 ..< GameboardSize.columns {
+            for row in 0 ..< GameboardSize.rows {
+                if positions[column][row] == nil {
+                    freeCells.append(GameboardPosition(column: column, row: row))
+                }
+            }
+        }
+        return freeCells
     }
 }

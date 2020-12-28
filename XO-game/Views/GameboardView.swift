@@ -12,20 +12,17 @@ import UIKit
 public class GameboardView: UIView {
     
     // MARK: - Public Properties
-    
     public var onSelectPosition: ((GameboardPosition) -> Void)?
     
     public private(set) var markViewForPosition: [GameboardPosition: MarkView] = [:]
     
     // MARK: - Constants
-    
     internal struct Constants {
         static let lineColor: UIColor = .black
         static let lineWidth: CGFloat = 7
     }
     
     // MARK: - Private Properties
-    
     private var calculatedColumnWidth: CGFloat {
         return bounds.width / CGFloat(GameboardSize.columns)
     }
@@ -34,7 +31,6 @@ public class GameboardView: UIView {
     }
     
     // MARK: - Public
-    
     public func clear() {
         for (_, markView) in markViewForPosition {
             markView.removeFromSuperview()
@@ -47,7 +43,11 @@ public class GameboardView: UIView {
     }
     
     public func placeMarkView(_ markView: MarkView, at position: GameboardPosition) {
-        guard self.canPlaceMarkView(at: position) else { return }
+        // guard self.canPlaceMarkView(at: position) else { return }
+        self.markViewForPosition[position]?.alpha = 1.0
+        UIView.animate(withDuration: 1) {
+            self.markViewForPosition[position]?.alpha = 0.3
+        }
         updateFrame(for: markView, at: position)
         markViewForPosition[position] = markView
         addSubview(markView)
@@ -62,7 +62,6 @@ public class GameboardView: UIView {
     }
     
     // MARK: - UIView
-    
     public override func draw(_ rect: CGRect) {
         super.draw(rect)
         Constants.lineColor.setStroke()
@@ -71,7 +70,6 @@ public class GameboardView: UIView {
     }
     
     // MARK: - Touch Handling
-    
     public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touchLocation = touches.first?.location(in: self) else { return }
         let position = GameboardPosition(column: determineColumn(for: touchLocation),
@@ -80,7 +78,6 @@ public class GameboardView: UIView {
     }
     
     // MARK: - UI
-    
     private func drawColumnLines(for rect: CGRect) {
         let columnWidth = self.calculatedColumnWidth
         for i in 1 ..< GameboardSize.columns {
@@ -106,7 +103,6 @@ public class GameboardView: UIView {
     }
     
     // MARK: - Private
-    
     private func determineColumn(for touchLocation: CGPoint) -> Int {
         let columnWidth = self.calculatedColumnWidth
         let lastColumn = GameboardSize.columns - 1

@@ -11,26 +11,26 @@ import Foundation
 public final class Referee {
     
     // MARK: - Properties
-    
     public let gameboard: Gameboard
     
     public private(set) lazy var winningCombinations: [[GameboardPosition]] = {
+
         var winningCombinations: [[GameboardPosition]] = []
+
         generateWinsByColumn(result: &winningCombinations)
         generateWinsByRow(result: &winningCombinations)
         generateWinLeftDiagonal(result: &winningCombinations)
         generateWinRightDiagonal(result: &winningCombinations)
+
         return winningCombinations
     }()
     
     // MARK: - Init
-    
     public init(gameboard: Gameboard) {
         self.gameboard = gameboard
     }
     
     // MARK: - Public
-    
     public func determineWinner() -> Player? {
         for player in Player.allCases {
             if doesPlayerHaveWinningCombination(player) {
@@ -40,8 +40,11 @@ public final class Referee {
         return nil
     }
     
-    // MARK: - Private
+    public func isDraw() -> Bool {
+        return gameboard.freeCells().count == 0
+    }
     
+    // MARK: - Private
     private func generateWinsByColumn(result: inout [[GameboardPosition]]) {
         var array: [GameboardPosition] = []
         for column in 0 ..< GameboardSize.columns {
